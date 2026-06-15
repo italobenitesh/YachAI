@@ -61,7 +61,7 @@ No mainstream AI tutor speaks Quechua. YachAI does.
 
 ## Demo Video
 
-[Link to demo video]
+https://youtu.be/G6w1B2KJdI8
 
 ## Team
 
