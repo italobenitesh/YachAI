@@ -1,0 +1,517 @@
+{
+  "_nota": "Las preguntas marcadas lang_in='qu' están escritas en quechua sureño BORRADOR (generado por IA): un hablante nativo debe validar también la pregunta, no solo la respuesta. Las preguntas en español prueban el caso real de un estudiante bilingüe que escribe en español pero tiene configurado quechua como idioma de respuesta; además sirven como set de calibración pedagógica al nivel CNEB (mismo tutor, idioma es).",
+  "_cobertura": "Los 10 ítems originales (M/C por nivel) se conservan sin cambios. Los ítems con id COMP-N#letra son la ampliación de cobertura en español: apuntan a 2-3 ítems por competencia y nivel en matemática (C23-C26) y 1-2 en ciencia (C20-C22), calibrados a cada estándar del documento CNEB. Filtrar con: python eval_quechua.py --lang-in es",
+  "items": [
+    {
+      "id": "M3-1",
+      "area": "Matemática",
+      "competencia": "C23 Resuelve problemas de cantidad",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "qu",
+      "question": "Kimsa quwiymi kan. Tawa quwitawan chaskini. ¿Hayka quwiyuqmi kani?"
+    },
+    {
+      "id": "M3-2",
+      "area": "Matemática",
+      "competencia": "C24 Regularidad, equivalencia y cambio",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "es",
+      "question": "Tengo este patrón: papa, maíz, papa, maíz, papa... ¿qué sigue? No entiendo qué es un patrón."
+    },
+    {
+      "id": "M4-1",
+      "area": "Matemática",
+      "competencia": "C23 Resuelve problemas de cantidad",
+      "nivel": 4,
+      "grado": 4,
+      "lang_in": "qu",
+      "question": "12 tantatam tawa warmakunaman rakiyta munani. ¿Haykatam sapa warma chaskinqa?"
+    },
+    {
+      "id": "M4-2",
+      "area": "Matemática",
+      "competencia": "C25 Gestión de datos e incertidumbre",
+      "nivel": 4,
+      "grado": 4,
+      "lang_in": "es",
+      "question": "En mi clase votamos por la fruta favorita: plátano 8 votos, naranja 5, tuna 8, manzana 3. La profesora pregunta cuál es la moda y no sé qué es eso."
+    },
+    {
+      "id": "M5-1",
+      "area": "Matemática",
+      "competencia": "C23 Resuelve problemas de cantidad",
+      "nivel": 5,
+      "grado": 6,
+      "lang_in": "es",
+      "question": "Mi mamá vendió 3/4 de un queso en el mercado y luego regaló 1/8 del queso a mi tía. ¿Qué parte del queso queda?"
+    },
+    {
+      "id": "M5-2",
+      "area": "Matemática",
+      "competencia": "C26 Forma, movimiento y localización",
+      "nivel": 5,
+      "grado": 5,
+      "lang_in": "es",
+      "question": "Quiero cercar mi chacra que es un rectángulo de 12 metros por 8 metros. ¿Cuántos metros de alambre necesito?"
+    },
+    {
+      "id": "C3-1",
+      "area": "Ciencia",
+      "competencia": "C21 Explica el mundo físico",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "qu",
+      "question": "¿Imanasqataq tuta chayamun? ¿Imanasqataq punchaw kan?"
+    },
+    {
+      "id": "C4-1",
+      "area": "Ciencia",
+      "competencia": "C20 Indaga mediante métodos científicos",
+      "nivel": 4,
+      "grado": 3,
+      "lang_in": "es",
+      "question": "La planta de mi ventana se está secando pero la riego todos los días. ¿Por qué se seca?"
+    },
+    {
+      "id": "C5-1",
+      "area": "Ciencia",
+      "competencia": "C22 Diseña soluciones tecnológicas",
+      "nivel": 5,
+      "grado": 6,
+      "lang_in": "es",
+      "question": "En mi comunidad las heladas malogran las papas. Quiero inventar algo para protegerlas. ¿Cómo empiezo?"
+    },
+    {
+      "id": "C5-2",
+      "area": "Ciencia",
+      "competencia": "C21 Explica el mundo físico",
+      "nivel": 5,
+      "grado": 5,
+      "lang_in": "qu",
+      "question": "¿Imanasqataq mayu chakin chirawpi?"
+    },
+
+    {
+      "id": "C23-N3a",
+      "area": "Matemática",
+      "competencia": "C23 Resuelve problemas de cantidad",
+      "nivel": 3,
+      "grado": 1,
+      "lang_in": "es",
+      "question": "Tenía 8 ovejas y se me perdieron 3 en el cerro. ¿Cómo hago para saber cuántas ovejas me quedan?"
+    },
+    {
+      "id": "C23-N3b",
+      "area": "Matemática",
+      "competencia": "C23 Resuelve problemas de cantidad",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "es",
+      "question": "Mi hermano juntó 6 mazorcas de maíz y yo junté las mismas que él. ¿Cuántas mazorcas tenemos entre los dos?"
+    },
+    {
+      "id": "C23-N3c",
+      "area": "Matemática",
+      "competencia": "C23 Resuelve problemas de cantidad",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "es",
+      "question": "En el mercado conté 24 papas. La profesora dice que 24 tiene decenas y unidades. ¿Cuántas decenas y cuántas unidades hay en 24?"
+    },
+    {
+      "id": "C23-N4a",
+      "area": "Matemática",
+      "competencia": "C23 Resuelve problemas de cantidad",
+      "nivel": 4,
+      "grado": 3,
+      "lang_in": "es",
+      "question": "Mi abuela tiene 5 costales y en cada costal hay 8 cuyes. ¿Cómo calculo cuántos cuyes tiene en total sin contarlos uno por uno?"
+    },
+    {
+      "id": "C23-N4b",
+      "area": "Matemática",
+      "competencia": "C23 Resuelve problemas de cantidad",
+      "nivel": 4,
+      "grado": 4,
+      "lang_in": "es",
+      "question": "Partí un pan en 4 pedazos iguales y me comí 1. ¿Qué fracción del pan me comí y qué fracción quedó?"
+    },
+    {
+      "id": "C23-N4c",
+      "area": "Matemática",
+      "competencia": "C23 Resuelve problemas de cantidad",
+      "nivel": 4,
+      "grado": 4,
+      "lang_in": "es",
+      "question": "Un saco de papa pesa 50 kilos. Si llevo 6 sacos al mercado en mi carreta, ¿cuántos kilos estoy cargando en total?"
+    },
+    {
+      "id": "C23-N5a",
+      "area": "Matemática",
+      "competencia": "C23 Resuelve problemas de cantidad",
+      "nivel": 5,
+      "grado": 6,
+      "lang_in": "es",
+      "question": "Vendí mis quesos a 8 soles con 50 céntimos cada uno y vendí 4 quesos. ¿Cuánto dinero junté en total?"
+    },
+    {
+      "id": "C23-N5b",
+      "area": "Matemática",
+      "competencia": "C23 Resuelve problemas de cantidad",
+      "nivel": 5,
+      "grado": 5,
+      "lang_in": "es",
+      "question": "En la feria hacen 25% de descuento en las mantas. Una manta cuesta 40 soles. ¿Cuánto dinero me descuentan?"
+    },
+    {
+      "id": "C23-N5c",
+      "area": "Matemática",
+      "competencia": "C23 Resuelve problemas de cantidad",
+      "nivel": 5,
+      "grado": 6,
+      "lang_in": "es",
+      "question": "Quiero repartir 36 choclos en bolsas iguales sin que sobre ninguno. ¿De qué tamaños puedo hacer las bolsas?"
+    },
+
+    {
+      "id": "C24-N3a",
+      "area": "Matemática",
+      "competencia": "C24 Regularidad, equivalencia y cambio",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "es",
+      "question": "Estoy tejiendo con lanas en este orden: roja, roja, blanca, roja, roja, blanca... ¿qué color va después y por qué?"
+    },
+    {
+      "id": "C24-N3b",
+      "area": "Matemática",
+      "competencia": "C24 Regularidad, equivalencia y cambio",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "es",
+      "question": "En una balanza puse 5 piedritas de un lado y 2 piedritas del otro. ¿Cuántas piedritas más le pongo al lado de las 2 para que la balanza quede igualada?"
+    },
+    {
+      "id": "C24-N4a",
+      "area": "Matemática",
+      "competencia": "C24 Regularidad, equivalencia y cambio",
+      "nivel": 4,
+      "grado": 3,
+      "lang_in": "es",
+      "question": "Por cada oveja necesito 2 baldes de agua al día. Si tengo 3 ovejas son 6 baldes. Si tuviera 5 ovejas, ¿cuántos baldes necesito? ¿Cómo lo saco rápido?"
+    },
+    {
+      "id": "C24-N4b",
+      "area": "Matemática",
+      "competencia": "C24 Regularidad, equivalencia y cambio",
+      "nivel": 4,
+      "grado": 4,
+      "lang_in": "es",
+      "question": "Tengo esta secuencia de números: 3, 6, 12, 24... ¿qué número sigue? No sé qué regla se está usando."
+    },
+    {
+      "id": "C24-N4c",
+      "area": "Matemática",
+      "competencia": "C24 Regularidad, equivalencia y cambio",
+      "nivel": 4,
+      "grado": 4,
+      "lang_in": "es",
+      "question": "Mi maestra escribió 4 + ___ = 10 y dice que los dos lados deben valer lo mismo. ¿Qué número va en el espacio y cómo lo encuentro?"
+    },
+    {
+      "id": "C24-N5a",
+      "area": "Matemática",
+      "competencia": "C24 Regularidad, equivalencia y cambio",
+      "nivel": 5,
+      "grado": 6,
+      "lang_in": "es",
+      "question": "Si 3 metros de tela para poncho cuestan 15 soles, ¿cuánto costarán 7 metros? ¿Cómo lo calculo?"
+    },
+    {
+      "id": "C24-N5b",
+      "area": "Matemática",
+      "competencia": "C24 Regularidad, equivalencia y cambio",
+      "nivel": 5,
+      "grado": 5,
+      "lang_in": "es",
+      "question": "Armo figuras con piedras: en la posición 1 pongo 1 piedra, en la 2 pongo 4, en la 3 pongo 9... ¿cuántas piedras habrá en la posición 5?"
+    },
+    {
+      "id": "C24-N5c",
+      "area": "Matemática",
+      "competencia": "C24 Regularidad, equivalencia y cambio",
+      "nivel": 5,
+      "grado": 6,
+      "lang_in": "es",
+      "question": "Pensé un número, le sumé 5 y me dio 12. ¿Qué número pensé y cómo lo averiguo?"
+    },
+
+    {
+      "id": "C25-N3a",
+      "area": "Matemática",
+      "competencia": "C25 Gestión de datos e incertidumbre",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "es",
+      "question": "Pregunté a mis amigos su animal favorito y me dijeron: perro, cuy, perro, gato, cuy, cuy. ¿Cómo ordeno esto para ver cuál gustó más?"
+    },
+    {
+      "id": "C25-N3b",
+      "area": "Matemática",
+      "competencia": "C25 Gestión de datos e incertidumbre",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "es",
+      "question": "Si saco una papa de un saco que SOLO tiene papas, ¿es posible o imposible que saque un maíz?"
+    },
+    {
+      "id": "C25-N3c",
+      "area": "Matemática",
+      "competencia": "C25 Gestión de datos e incertidumbre",
+      "nivel": 3,
+      "grado": 1,
+      "lang_in": "es",
+      "question": "En mi tabla de conteo el maíz tiene 4 palitos y la quinua tiene 2 palitos. ¿Cuál sembramos más?"
+    },
+    {
+      "id": "C25-N4a",
+      "area": "Matemática",
+      "competencia": "C25 Gestión de datos e incertidumbre",
+      "nivel": 4,
+      "grado": 4,
+      "lang_in": "es",
+      "question": "Hice una encuesta de cuántos hermanos tiene cada niño y quiero un gráfico de barras, pero los números llegan hasta 30. ¿Cómo elijo la escala para que no salga gigante?"
+    },
+    {
+      "id": "C25-N4b",
+      "area": "Matemática",
+      "competencia": "C25 Gestión de datos e incertidumbre",
+      "nivel": 4,
+      "grado": 3,
+      "lang_in": "es",
+      "question": "Estamos en enero en la sierra. ¿Que llueva hoy es seguro, más probable o menos probable? ¿Por qué?"
+    },
+    {
+      "id": "C25-N5a",
+      "area": "Matemática",
+      "competencia": "C25 Gestión de datos e incertidumbre",
+      "nivel": 5,
+      "grado": 6,
+      "lang_in": "es",
+      "question": "Tiro un dado de 6 caras. ¿Qué probabilidad hay de que salga un número mayor que 4? ¿Cómo lo calculo?"
+    },
+    {
+      "id": "C25-N5b",
+      "area": "Matemática",
+      "competencia": "C25 Gestión de datos e incertidumbre",
+      "nivel": 5,
+      "grado": 5,
+      "lang_in": "es",
+      "question": "Anoté cuántos kilos de papa cosechamos en 2022, 2023, 2024 y 2025. Quiero ver si la cosecha va subiendo o bajando con los años. ¿Qué tipo de gráfico me conviene?"
+    },
+    {
+      "id": "C25-N5c",
+      "area": "Matemática",
+      "competencia": "C25 Gestión de datos e incertidumbre",
+      "nivel": 5,
+      "grado": 6,
+      "lang_in": "es",
+      "question": "En una bolsa hay 3 canicas rojas y 5 azules. Si saco una sin mirar, ¿es más probable que salga roja o azul? ¿Por qué?"
+    },
+
+    {
+      "id": "C26-N3a",
+      "area": "Matemática",
+      "competencia": "C26 Forma, movimiento y localización",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "es",
+      "question": "Mi mamá hizo un queso redondo y también un adobe con forma de caja. ¿En qué se diferencian esas dos formas?"
+    },
+    {
+      "id": "C26-N3b",
+      "area": "Matemática",
+      "competencia": "C26 Forma, movimiento y localización",
+      "nivel": 3,
+      "grado": 1,
+      "lang_in": "es",
+      "question": "Medí el ancho de mi mesa con mi mano y me dio 6 manos. Mi amigo midió la misma mesa y le dio 5 manos. ¿Por qué nos salió distinto?"
+    },
+    {
+      "id": "C26-N3c",
+      "area": "Matemática",
+      "competencia": "C26 Forma, movimiento y localización",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "es",
+      "question": "Para ir de mi casa a la escuela camino 3 cuadras al frente y luego 2 cuadras a la derecha. ¿Cómo dibujo ese camino en una cuadrícula?"
+    },
+    {
+      "id": "C26-N4a",
+      "area": "Matemática",
+      "competencia": "C26 Forma, movimiento y localización",
+      "nivel": 4,
+      "grado": 4,
+      "lang_in": "es",
+      "question": "Dibujé un cuadrado y un triángulo. ¿Cuántos lados y cuántas esquinas (vértices) tiene cada uno?"
+    },
+    {
+      "id": "C26-N4b",
+      "area": "Matemática",
+      "competencia": "C26 Forma, movimiento y localización",
+      "nivel": 4,
+      "grado": 3,
+      "lang_in": "es",
+      "question": "Doblé una hoja por la mitad, dibujé media flor pegada al doblez y recorté. Al abrirla salió la flor completa y pareja. ¿Por qué pasa eso?"
+    },
+    {
+      "id": "C26-N4c",
+      "area": "Matemática",
+      "competencia": "C26 Forma, movimiento y localización",
+      "nivel": 4,
+      "grado": 4,
+      "lang_in": "es",
+      "question": "Quiero saber cuánta tierra ocupa mi huerto cuadrado para sembrar. ¿Es lo mismo medir el borde de afuera que medir todo lo de adentro?"
+    },
+    {
+      "id": "C26-N5a",
+      "area": "Matemática",
+      "competencia": "C26 Forma, movimiento y localización",
+      "nivel": 5,
+      "grado": 6,
+      "lang_in": "es",
+      "question": "Mi chacra es un cuadrado de 9 metros por lado. ¿Cuántos metros cuadrados de terreno tengo para sembrar?"
+    },
+    {
+      "id": "C26-N5b",
+      "area": "Matemática",
+      "competencia": "C26 Forma, movimiento y localización",
+      "nivel": 5,
+      "grado": 5,
+      "lang_in": "es",
+      "question": "Estaba parado mirando hacia el cerro y di media vuelta. ¿Hacia dónde estoy mirando ahora? ¿Y si en vez de media vuelta doy un cuarto de vuelta a la derecha?"
+    },
+
+    {
+      "id": "C20-N3a",
+      "area": "Ciencia",
+      "competencia": "C20 Indaga mediante métodos científicos",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "es",
+      "question": "Puse una piedra y un palito en el balde de agua: el palito flota y la piedra se hunde. ¿Cómo puedo averiguar por qué pasa eso?"
+    },
+    {
+      "id": "C20-N3b",
+      "area": "Ciencia",
+      "competencia": "C20 Indaga mediante métodos científicos",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "es",
+      "question": "Quiero saber qué semilla brota más rápido, la de frijol o la de maíz. ¿Cómo hago para averiguarlo bien y estar seguro?"
+    },
+    {
+      "id": "C20-N4a",
+      "area": "Ciencia",
+      "competencia": "C20 Indaga mediante métodos científicos",
+      "nivel": 4,
+      "grado": 4,
+      "lang_in": "es",
+      "question": "Me di cuenta de que el agua del balde baja más rápido los días de sol que los días nublados. ¿Cómo compruebo si de verdad el sol es la causa?"
+    },
+    {
+      "id": "C20-N5a",
+      "area": "Ciencia",
+      "competencia": "C20 Indaga mediante métodos científicos",
+      "nivel": 5,
+      "grado": 6,
+      "lang_in": "es",
+      "question": "Creo que las plantas de mi chacra crecen más si les echo ceniza a la tierra. ¿Cómo armo un experimento para comprobarlo de verdad y no equivocarme?"
+    },
+    {
+      "id": "C20-N5b",
+      "area": "Ciencia",
+      "competencia": "C20 Indaga mediante métodos científicos",
+      "nivel": 5,
+      "grado": 5,
+      "lang_in": "es",
+      "question": "Mis papás dicen que la papa se conserva mejor guardada en un sitio oscuro que a la luz. ¿Cómo lo comprobaría yo comparando las dos formas?"
+    },
+
+    {
+      "id": "C21-N3a",
+      "area": "Ciencia",
+      "competencia": "C21 Explica el mundo físico",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "es",
+      "question": "Cuando dejo mi chocolate al sol se vuelve blandito y líquido. ¿Por qué se derrite?"
+    },
+    {
+      "id": "C21-N4a",
+      "area": "Ciencia",
+      "competencia": "C21 Explica el mundo físico",
+      "nivel": 4,
+      "grado": 4,
+      "lang_in": "es",
+      "question": "En la puna hace mucho frío y las vicuñas tienen el pelo bien tupido y grueso. ¿Ese pelo les sirve para algo?"
+    },
+    {
+      "id": "C21-N4b",
+      "area": "Ciencia",
+      "competencia": "C21 Explica el mundo físico",
+      "nivel": 4,
+      "grado": 3,
+      "lang_in": "es",
+      "question": "Cuando empujo mi carreta con más fuerza, avanza más rápido. ¿Por qué pasa eso?"
+    },
+    {
+      "id": "C21-N5a",
+      "area": "Ciencia",
+      "competencia": "C21 Explica el mundo físico",
+      "nivel": 5,
+      "grado": 6,
+      "lang_in": "es",
+      "question": "Alrededor de mi comunidad hay cerros muy altos y también valles bajos. ¿Por qué la Tierra no es plana y tiene montañas?"
+    },
+
+    {
+      "id": "C22-N3a",
+      "area": "Ciencia",
+      "competencia": "C22 Diseña soluciones tecnológicas",
+      "nivel": 3,
+      "grado": 2,
+      "lang_in": "es",
+      "question": "Cuando llueve, el agua entra por debajo de la puerta de mi salón y moja el piso. Quiero hacer algo para que no entre. ¿Cómo lo pienso?"
+    },
+    {
+      "id": "C22-N4a",
+      "area": "Ciencia",
+      "competencia": "C22 Diseña soluciones tecnológicas",
+      "nivel": 4,
+      "grado": 4,
+      "lang_in": "es",
+      "question": "Mis cuyes se escapan del corral por un hueco. Quiero diseñar una tapa para taparlo. ¿Qué pasos sigo para construirla?"
+    },
+    {
+      "id": "C22-N4b",
+      "area": "Ciencia",
+      "competencia": "C22 Diseña soluciones tecnológicas",
+      "nivel": 4,
+      "grado": 3,
+      "lang_in": "es",
+      "question": "Quiero regar mi huerto sin cargar el balde tantas veces desde el río. ¿Cómo pienso algo que lleve el agua hasta las plantas?"
+    },
+    {
+      "id": "C22-N5a",
+      "area": "Ciencia",
+      "competencia": "C22 Diseña soluciones tecnológicas",
+      "nivel": 5,
+      "grado": 6,
+      "lang_in": "es",
+      "question": "En mi casa no llega luz eléctrica y quiero cargar una linterna usando el sol. ¿Cómo diseño algo así, paso a paso?"
+    }
+  ]
+}

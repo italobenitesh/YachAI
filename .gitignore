@@ -1,0 +1,5 @@
+.env
+yachaq.db
+__pycache__/
+*.pyc
+eval/reports/

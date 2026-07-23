@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YachAI — Tutor de Matemática y Ciencia</title>
+<style>
+  /* ============================================================
+     Sistema visual — sin dependencias externas, todo autocontenido.
+     Fondo claro tipo papel (los proyectores débiles lavan los
+     fondos oscuros), tinta azul-noche casi negra, y una paleta
+     con función: azul = voz del estudiante, terracota = acción,
+     verde = logro, ocre = avisos del sistema.
+     ============================================================ */
+  :root {
+    --papel:      #fdfbf5;
+    --papel-alto: #ffffff;
+    --tinta:      #16203a;
+    --tinta-2:    #4d5872;
+    --azul:       #12599e;
+    --azul-suave: #e7f0f9;
+    --terracota:  #c2521f;
+    --terracota-o:#8e3a12;
+    --ocre:       #dd9b1a;
+    --verde:      #0f6b39;
+    --verde-osc:  #084524;
+    --linea:      #e0d8c6;
+
+    --r-sm: 10px;
+    --r-md: 16px;
+    --r-lg: 24px;
+    --sombra:    0 2px 4px rgba(22,32,58,.06), 0 8px 24px rgba(22,32,58,.08);
+    --sombra-alt: 0 4px 8px rgba(22,32,58,.08), 0 16px 40px rgba(22,32,58,.12);
+
+    /* Trebuchet/Segoe tienen más carácter que la default y vienen
+       instaladas en Windows y macOS: cero descargas, cero CDN. */
+    --display: "Trebuchet MS", "Segoe UI Semibold", "Gill Sans", system-ui, sans-serif;
+    --texto:   "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+
+  body {
+    font-family: var(--texto);
+    font-size: clamp(18px, 1.9vw, 24px);
+    line-height: 1.5;
+    color: var(--tinta);
+    background: var(--papel);
+    /* Trama suave de fondo: da textura sin restar contraste. */
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(18,89,158,.05), transparent 42%),
+      radial-gradient(circle at 88% 82%, rgba(194,82,31,.05), transparent 42%);
+    min-height: 100vh;
+  }
+
+  /* Banda tipo telar andino: puro CSS, sin imágenes. */
+  .telar {
+    height: 9px;
+    flex: none;
+    background: repeating-linear-gradient(90deg,
+      var(--terracota) 0 16px, var(--ocre) 16px 24px,
+      var(--azul) 24px 40px, var(--verde) 40px 48px);
+  }
+
+  .pantalla { display: none; min-height: 100vh; flex-direction: column; }
+  .pantalla.activa { display: flex; }
+
+  button { font-family: inherit; cursor: pointer; }
+  button:disabled { opacity: .4; cursor: not-allowed; }
+  :focus-visible { outline: 3px solid var(--azul); outline-offset: 3px; }
+
+  /* ---------------------------------------------- 1 · Entrada --- */
+  #entrada { align-items: center; justify-content: center; padding: 2rem 1rem; }
+
+  .tarjeta {
+    width: min(94vw, 660px);
+    background: var(--papel-alto);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sombra-alt);
+    overflow: hidden;
+    text-align: center;
+  }
+  .tarjeta-cuerpo { padding: clamp(1.4rem, 3vw, 2.4rem) clamp(1.5rem, 4vw, 3rem); }
+
+  .marca {
+    font-family: var(--display);
+    font-size: clamp(2.4rem, 5.4vw, 3.6rem);
+    font-weight: 700;
+    letter-spacing: -.03em;
+    line-height: 1;
+    color: var(--tinta);
+  }
+  .marca em { font-style: normal; color: var(--azul); }
+  .marca .llama { display: block; font-size: .55em; line-height: 1; }
+
+  .lema {
+    font-size: 1rem;
+    color: var(--tinta-2);
+    margin-top: .7rem;
+    text-wrap: balance;
+  }
+  .lema strong { color: var(--terracota); font-weight: 600; }
+
+  .campo { margin-top: 1.4rem; }
+  .campo-etiqueta {
+    display: block;
+    font-family: var(--display);
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--tinta-2);
+    margin-bottom: .6rem;
+  }
+  #nombre {
+    width: 100%;
+    font-family: var(--display);
+    font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+    font-weight: 600;
+    text-align: center;
+    padding: .45em .6em;
+    color: var(--tinta);
+    background: var(--papel);
+    border: 3px solid #c9bfa8;   /* más marcado: es la acción principal */
+    border-radius: var(--r-md);
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  #nombre::placeholder { color: #a49b87; font-weight: 400; }
+  #nombre:focus {
+    outline: none;
+    background: var(--papel-alto);
+    border-color: var(--azul);
+    box-shadow: 0 0 0 5px var(--azul-suave);
+  }
+
+  .grupo-chips { margin-top: 1.1rem; }
+  .chips { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; }
+  .chip {
+    font-size: 1.02rem;
+    font-weight: 600;
+    padding: .42em 1.05em;
+    color: var(--tinta-2);
+    background: var(--papel);
+    border: 2px solid var(--linea);
+    border-radius: 999px;
+    transition: all .15s;
+  }
+  .chip:hover { border-color: var(--azul); color: var(--azul); }
+  .chip.sel {
+    background: var(--azul);
+    border-color: var(--azul);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(18,89,158,.3);
+  }
+
+  .boton-grande {
+    margin-top: 1.6rem;
+    font-family: var(--display);
+    font-size: clamp(1.4rem, 2.8vw, 1.85rem);
+    font-weight: 700;
+    letter-spacing: .01em;
+    padding: .6em 2.2em;
+    color: #fff;
+    background: var(--terracota);
+    border: 0;
+    border-radius: var(--r-md);
+    box-shadow: 0 5px 0 var(--terracota-o), 0 10px 22px rgba(194,82,31,.28);
+    transition: transform .1s, box-shadow .1s, filter .15s;
+  }
+  .boton-grande:hover { filter: brightness(1.06); }
+  .boton-grande:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 var(--terracota-o), 0 4px 12px rgba(194,82,31,.25);
+  }
+
+  .pie-nota {
+    margin-top: 1.1rem;
+    font-size: .8rem;
+    color: var(--tinta-2);
+    opacity: .85;
+  }
+
+  /* Proyectores y laptops de poca altura (1024x768 típico): comprime el
+     ritmo vertical para que el botón principal nunca quede fuera de vista. */
+  @media (max-height: 800px) {
+    .marca { font-size: clamp(2rem, 4.4vw, 2.8rem); }
+    .marca .llama { font-size: .45em; }
+    .lema { font-size: .92rem; margin-top: .5rem; }
+    .tarjeta-cuerpo { padding: 1.1rem 1.6rem 1.4rem; }
+    .campo, .grupo-chips { margin-top: .9rem; }
+    .campo-etiqueta { margin-bottom: .35rem; font-size: .74rem; }
+    #nombre { font-size: 1.4rem; padding: .35em .6em; }
+    .chip { font-size: .95rem; padding: .34em .9em; }
+    .boton-grande { margin-top: 1.1rem; font-size: 1.4rem; padding: .5em 2em; }
+    .pie-nota { margin-top: .8rem; }
+  }
+
+  /* ------------------------------------------ 2 · Conversación --- */
+  /* Altura fija: el dock de escritura debe quedar SIEMPRE a la vista, sin
+     importar cuánto crezca la conversación (es la única forma de escribir). */
+  #charla { background: var(--papel); height: 100vh; }
+
+  .barra-sup {
+    background: var(--papel-alto);
+    border-bottom: 1px solid var(--linea);
+    box-shadow: 0 1px 12px rgba(22,32,58,.05);
+  }
+  .barra-sup-interna {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: .75rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .identidad { flex: 1; min-width: 0; }
+  .identidad .nombre {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .identidad .meta { font-size: .88rem; color: var(--tinta-2); }
+
+  #reloj {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    padding: .18em .6em;
+    border-radius: var(--r-sm);
+    color: var(--tinta-2);
+    background: var(--papel);
+    border: 2px solid var(--linea);
+    transition: all .3s;
+  }
+  #reloj.urgente {
+    color: #fff;
+    background: var(--terracota);
+    border-color: var(--terracota);
+    animation: pulso 1.1s ease-in-out infinite;
+  }
+  @keyframes pulso { 50% { opacity: .55; } }
+
+  .boton-plano {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: .5em 1.1em;
+    color: var(--tinta);
+    background: var(--papel-alto);
+    border: 2px solid var(--linea);
+    border-radius: var(--r-sm);
+    white-space: nowrap;
+    transition: all .15s;
+  }
+  .boton-plano:hover { border-color: var(--azul); color: var(--azul); }
+
+  #mensajes {
+    flex: 1;
+    min-height: 0;   /* sin esto el flex item no encoge y empuja el dock fuera */
+    overflow-y: auto;
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 1.6rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.3rem;
+  }
+
+  .msg { display: flex; flex-direction: column; gap: .3rem; max-width: 82%; }
+  .msg.de-tutor { align-self: flex-start; }
+  .msg.de-estudiante { align-self: flex-end; align-items: flex-end; }
+
+  .autor {
+    font-family: var(--display);
+    font-size: .76rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--tinta-2);
+    padding: 0 .5rem;
+  }
+  .de-tutor .autor { color: var(--azul); }
+
+  .burbuja {
+    padding: .85em 1.05em;
+    border-radius: var(--r-md);
+    font-size: clamp(1.15rem, 2.1vw, 1.4rem);
+    line-height: 1.55;
+    white-space: pre-wrap;
+    animation: aparece .22s ease-out;
+  }
+  .de-tutor .burbuja {
+    background: var(--papel-alto);
+    border: 2px solid var(--linea);
+    border-left: 5px solid var(--azul);
+    border-top-left-radius: 5px;
+    box-shadow: var(--sombra);
+  }
+  .de-estudiante .burbuja {
+    background: var(--azul);
+    color: #fff;
+    border-top-right-radius: 5px;
+    box-shadow: 0 3px 12px rgba(18,89,158,.25);
+  }
+  .burbuja.pensando { color: var(--tinta-2); font-style: italic; }
+  .burbuja.pensando::after {
+    content: "";
+    display: inline-block;
+    width: .6em;
+    text-align: left;
+    animation: puntos 1.2s steps(4, end) infinite;
+  }
+  @keyframes puntos { 0% { content: ""; } 25% { content: "."; }
+                      50% { content: ".."; } 75% { content: "..."; } }
+  @keyframes aparece { from { opacity: 0; transform: translateY(6px); } }
+
+  .aviso {
+    align-self: center;
+    font-size: .92rem;
+    font-weight: 600;
+    color: #7a5600;
+    background: #fdf3d4;
+    border: 1px solid var(--ocre);
+    border-radius: 999px;
+    padding: .35em 1.1em;
+  }
+
+  .zona-inferior {
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 1.2rem 1.4rem;
+  }
+  /* Barra de acción: aparece bajo la conversación cuando el turno puede
+     cerrarse. NUNCA avanza sola — el texto del tutor debe poder leerse
+     completo, así que el paso a la celebración es siempre un clic. */
+  #barra-accion {
+    display: none;
+    gap: .9rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: .9rem 1.1rem;
+    margin-bottom: .9rem;
+    border-radius: var(--r-md);
+    animation: aparece .25s ease-out;
+  }
+  #barra-accion.visible { display: flex; }
+  #barra-accion .nota { font-size: .95rem; font-weight: 600; }
+
+  /* Variante "acertó": el modelo ya juzgó bien la verificación. */
+  #barra-accion.exito {
+    background: #e6f4ec;
+    border: 2px solid var(--verde);
+  }
+  #barra-accion.exito .nota { color: var(--verde-osc); }
+
+  /* Variante "sin conexión": no hay modelo que juzgue, decide el facilitador. */
+  #barra-accion.manual {
+    background: #fdf3d4;
+    border: 2px solid var(--ocre);
+  }
+  #barra-accion.manual .nota { color: #7a5600; }
+
+  .boton-ok {
+    font-size: 1.05rem;
+    color: #fff;
+    background: var(--verde);
+    border-color: var(--verde);
+    box-shadow: 0 3px 10px rgba(15,107,57,.28);
+  }
+  .boton-ok:hover { color: #fff; background: var(--verde-osc); border-color: var(--verde-osc); }
+
+  .dock {
+    display: flex;
+    gap: .7rem;
+    padding: .7rem;
+    background: var(--papel-alto);
+    border: 2px solid var(--linea);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sombra);
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .dock:focus-within {
+    border-color: var(--azul);
+    box-shadow: 0 0 0 5px var(--azul-suave), var(--sombra);
+  }
+  #pregunta {
+    flex: 1;
+    font-family: inherit;
+    font-size: clamp(1.15rem, 2.1vw, 1.4rem);
+    line-height: 1.45;
+    padding: .5em .6em;
+    color: var(--tinta);
+    background: transparent;
+    border: 0;
+    resize: none;
+  }
+  #pregunta:focus { outline: none; }
+  #pregunta::placeholder { color: #b5ae9c; }
+
+  .boton-icono {
+    flex: none;
+    width: 3.5rem;
+    font-size: 1.5rem;
+    color: var(--tinta-2);
+    background: var(--papel);
+    border: 2px solid var(--linea);
+    border-radius: var(--r-md);
+    transition: all .15s;
+  }
+  .boton-icono:hover { border-color: var(--azul); color: var(--azul); }
+  .boton-icono.enviar {
+    color: #fff;
+    background: var(--azul);
+    border-color: var(--azul);
+    box-shadow: 0 3px 10px rgba(18,89,158,.3);
+  }
+  .boton-icono.enviar:hover { filter: brightness(1.08); color: #fff; }
+  #mic.grabando {
+    color: #fff;
+    background: var(--terracota);
+    border-color: var(--terracota);
+    animation: pulso 1.1s ease-in-out infinite;
+  }
+
+  /* ------------------------------------------- 3 · Celebración --- */
+  #celebracion {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    color: #fff;
+    background: var(--verde);
+    background-image:
+      radial-gradient(circle at 50% 0%, rgba(255,255,255,.18), transparent 55%),
+      radial-gradient(circle at 15% 90%, rgba(0,0,0,.14), transparent 45%);
+  }
+  #celebracion .emoji {
+    font-size: clamp(4rem, 11vw, 6.5rem);
+    line-height: 1;
+    animation: salta 1.15s ease-in-out infinite alternate;
+  }
+  @keyframes salta { to { transform: translateY(-16px); } }
+
+  #celebra-texto {
+    font-family: var(--display);
+    font-size: clamp(2.6rem, 8vw, 5rem);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    line-height: 1.05;
+    margin-top: 1rem;
+    text-wrap: balance;
+    text-shadow: 0 3px 16px rgba(0,0,0,.2);
+    animation: entra .45s cubic-bezier(.2,.9,.3,1.3);
+  }
+  @keyframes entra { from { opacity: 0; transform: scale(.7); } }
+
+  #celebracion .detalle {
+    font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+    margin-top: 1rem;
+    max-width: 34ch;
+    opacity: .95;
+    text-wrap: balance;
+  }
+  #celebracion .telar { width: min(90vw, 420px); margin-top: 2rem; border-radius: 999px; }
+
+  #celebracion .boton-grande {
+    margin-top: 1.6rem;
+    color: var(--verde);
+    background: #fff;
+    box-shadow: 0 5px 0 rgba(0,0,0,.22), 0 10px 26px rgba(0,0,0,.22);
+  }
+  #celebracion .boton-grande:active { box-shadow: 0 1px 0 rgba(0,0,0,.22); }
+
+  /* Barra de avance: hace visible cuánto falta para el siguiente turno. */
+  .avance {
+    width: min(80vw, 340px);
+    height: 6px;
+    margin-top: 1.8rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,.28);
+    overflow: hidden;
+  }
+  .avance i {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: #fff;
+  }
+  .avance.corriendo i { animation: avanzar var(--dur, 6s) linear forwards; }
+  @keyframes avanzar { to { width: 100%; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .avance i { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ 1 · Entrada rápida ═══════════════ -->
+<section id="entrada" class="pantalla activa">
+  <div class="tarjeta">
+    <div class="telar"></div>
+    <div class="tarjeta-cuerpo">
+      <h1 class="marca"><span class="llama">🦙</span>Yach<em>AI</em></h1>
+      <p class="lema">
+        Tu tutor de <strong>matemática</strong> y <strong>ciencia</strong>.<br>
+        Te enseña a razonar paso a paso — no te da la respuesta.
+      </p>
+
+      <div class="campo">
+        <label class="campo-etiqueta" for="nombre">¿Cómo te llamas?</label>
+        <input id="nombre" placeholder="Escribe tu nombre" autocomplete="off"
+               maxlength="40" enterkeyhint="go">
+      </div>
+
+      <div class="grupo-chips">
+        <span class="campo-etiqueta">Grado</span>
+        <div class="chips" id="chips-grado">
+          <button class="chip" data-v="1">1°</button><button class="chip" data-v="2">2°</button>
+          <button class="chip" data-v="3">3°</button><button class="chip sel" data-v="4">4°</button>
+          <button class="chip" data-v="5">5°</button><button class="chip" data-v="6">6°</button>
+        </div>
+      </div>
+
+      <div class="grupo-chips">
+        <span class="campo-etiqueta">Idioma</span>
+        <div class="chips" id="chips-idioma">
+          <button class="chip sel" data-v="es">Español</button>
+          <button class="chip" data-v="en">English</button>
+          <button class="chip" data-v="qu">Quechua</button>
+        </div>
+      </div>
+
+      <button class="boton-grande" id="btn-empezar">¡Empezar!</button>
+      <p class="pie-nota">Turnos de 2 a 3 minutos · levanta la mano para participar</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 2 · Conversación ═══════════════ -->
+<section id="charla" class="pantalla">
+  <div class="telar"></div>
+  <div class="barra-sup">
+    <div class="barra-sup-interna">
+      <div class="identidad">
+        <div class="nombre" id="quien-nombre"></div>
+        <div class="meta" id="quien-detalle"></div>
+      </div>
+      <div id="reloj">3:00</div>
+      <button class="boton-plano" id="btn-terminar">Siguiente estudiante ▸</button>
+    </div>
+  </div>
+
+  <div id="mensajes"></div>
+
+  <div class="zona-inferior">
+    <div id="barra-accion">
+      <span class="nota" id="accion-nota"></span>
+      <button class="boton-plano boton-ok" id="btn-celebrar"></button>
+    </div>
+    <div class="dock">
+      <textarea id="pregunta" rows="2"
+        placeholder="Escribe o dicta tu pregunta de matemática o ciencia…"></textarea>
+      <button class="boton-icono" id="mic" title="Dictar tu pregunta" aria-label="Dictar">🎤</button>
+      <button class="boton-icono enviar" id="btn-enviar" title="Enviar" aria-label="Enviar">➤</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 3 · Cierre positivo ═══════════════ -->
+<section id="celebracion" class="pantalla">
+  <div class="emoji">🎉</div>
+  <div id="celebra-texto">¡Muy bien!</div>
+  <p class="detalle">Lo resolviste razonando paso a paso, tú solo.</p>
+  <div class="telar"></div>
+  <div class="avance" id="avance"><i></i></div>
+  <button class="boton-grande" id="btn-siguiente">Siguiente estudiante</button>
+</section>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  /* El cierre del turno tiene DOS momentos separados a propósito:
+       1. La explicación del tutor confirmando por qué acertó. Se queda en
+          pantalla indefinidamente: leerla es parte del aprendizaje y ningún
+          timer debe cortarla. Se avanza con un clic.
+       2. La pantalla verde de celebración, que sí avanza sola porque no
+          tiene nada que leer más allá del "¡Muy bien!".
+     Las duraciones de abajo aplican SOLO al momento 2. */
+  const MIN_CELEBRACION = 4000;   // piso legible: no se va sola antes de esto
+  const AUTO_CELEBRACION = 6000;  // avance automático al siguiente turno
+
+  let alumno = null;
+  let ocupado = false;
+  let cronometro = null;
+
+  /* Todos los temporizadores se registran para poder cancelarlos al cambiar
+     de pantalla. Sin esto, un timer del turno ANTERIOR sobrevive y cierra la
+     celebración del estudiante SIGUIENTE a los pocos segundos (era el bug
+     de "la pantalla verde desaparece demasiado rápido"). */
+  let timers = [];
+  function later(fn, ms) { const t = setTimeout(fn, ms); timers.push(t); return t; }
+  function cancelarTimers() { timers.forEach(clearTimeout); timers = []; }
+
+  function pantalla(id) {
+    cancelarTimers();
+    document.querySelectorAll(".pantalla").forEach(p => p.classList.remove("activa"));
+    $(id).classList.add("activa");
+  }
+
+  // chips (grado / idioma): selección única
+  for (const grupo of ["chips-grado", "chips-idioma"]) {
+    $(grupo).addEventListener("click", (e) => {
+      if (!e.target.classList.contains("chip")) return;
+      $(grupo).querySelectorAll(".chip").forEach(c => c.classList.remove("sel"));
+      e.target.classList.add("sel");
+    });
+  }
+  const chipSel = (grupo) => $(grupo).querySelector(".chip.sel").dataset.v;
+
+  // ---------------------------------------------------- entrada ---
+  async function empezar() {
+    const name = $("nombre").value.trim();
+    if (!name) { $("nombre").focus(); return; }
+    let d;
+    try {
+      const r = await fetch("/api/start", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name, grade: chipSel("chips-grado"), lang: chipSel("chips-idioma"),
+        }),
+      });
+      d = await r.json();
+    } catch (err) {
+      alert("No se pudo conectar con el servidor local: " + err.message);
+      return;
+    }
+    if (d.error) { alert(d.error); return; }
+    alumno = d;
+
+    $("quien-nombre").textContent = alumno.name;
+    $("quien-detalle").textContent =
+      `${alumno.grade}° de primaria` + (alumno.returning ? " · ¡te recuerdo! 👋" : "");
+    $("mensajes").innerHTML = "";
+    ocultarBarraAccion();
+
+    pantalla("charla");
+    burbuja("tutor", alumno.returning
+      ? `¡Hola de nuevo, ${alumno.name}! ¿Qué pregunta de matemática o ciencia tienes hoy?`
+      : `¡Hola, ${alumno.name}! Escribe o dicta tu pregunta de matemática o ciencia.`);
+    iniciarReloj(180);
+    $("pregunta").value = "";
+    $("pregunta").focus();
+  }
+  $("btn-empezar").addEventListener("click", empezar);
+  $("nombre").addEventListener("keydown", (e) => { if (e.key === "Enter") empezar(); });
+
+  // ----------------------------------------------- conversación ---
+  function burbuja(tipo, texto) {
+    const esTutor = tipo.startsWith("tutor");
+    const msg = document.createElement("div");
+    msg.className = "msg " + (esTutor ? "de-tutor" : "de-estudiante");
+
+    const autor = document.createElement("div");
+    autor.className = "autor";
+    autor.textContent = esTutor ? "Yachaq" : (alumno?.name || "Tú");
+
+    const bur = document.createElement("div");
+    bur.className = "burbuja" + (tipo.includes("pensando") ? " pensando" : "");
+    bur.textContent = texto;
+
+    msg.append(autor, bur);
+    $("mensajes").append(msg);
+    $("mensajes").scrollTop = $("mensajes").scrollHeight;
+    return msg;
+  }
+
+  function aviso(texto) {
+    const div = document.createElement("div");
+    div.className = "aviso";
+    div.textContent = texto;
+    $("mensajes").append(div);
+    $("mensajes").scrollTop = $("mensajes").scrollHeight;
+  }
+
+  // ------------------------------------------- barra de cierre ---
+  function ocultarBarraAccion() {
+    $("barra-accion").classList.remove("visible", "exito", "manual");
+  }
+
+  function mostrarBarraAccion(modo) {
+    const barra = $("barra-accion");
+    if (modo === "exito") {
+      $("accion-nota").textContent =
+        `¡${alumno.name} respondió bien! Lee la explicación con calma…`;
+      $("btn-celebrar").textContent = "🎉 Pasar a la celebración";
+    } else {
+      $("accion-nota").textContent = "Sin conexión — el facilitador decide:";
+      $("btn-celebrar").textContent = "✓ ¡Respondió bien!";
+    }
+    barra.classList.remove("exito", "manual");
+    barra.classList.add("visible", modo);
+    barra.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
+
+  async function enviar() {
+    const texto = $("pregunta").value.trim();
+    if (!texto || ocupado) return;
+    ocupado = true;
+    $("btn-enviar").disabled = true;
+    $("pregunta").value = "";
+    ocultarBarraAccion();
+    burbuja("estudiante", texto);
+    const espera = burbuja("tutor pensando", "Yachaq está pensando");
+    try {
+      const r = await fetch("/api/ask", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: texto }),
+      });
+      const d = await r.json();
+      espera.remove();
+      if (d.error) { aviso(d.error); return; }
+      burbuja("tutor", d.reply);
+      if (d.source === "banco") aviso("Sin conexión: respuesta del banco local");
+      if (d.source === "pendiente") aviso("Sin conexión: pregunta guardada como pendiente");
+
+      // Acertó: NO se salta solo a la celebración. La explicación del tutor
+      // se queda visible hasta que alguien decida avanzar (antes un timer de
+      // 2,2 s la borraba antes de que se pudiera terminar de leer).
+      if (d.estado === "correcto") mostrarBarraAccion("exito");
+      // Sin modelo no hay quién juzgue la verificación: decide el facilitador.
+      else if (d.estado === "manual") mostrarBarraAccion("manual");
+    } catch (err) {
+      espera.remove();
+      aviso("Error de conexión con el servidor local: " + err.message);
+    } finally {
+      ocupado = false;
+      $("btn-enviar").disabled = false;
+      $("pregunta").focus();
+    }
+  }
+  $("btn-enviar").addEventListener("click", enviar);
+  $("pregunta").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); enviar(); }
+  });
+
+  /* Dictado con Web Speech API (Chrome). Suele requerir internet: si no está
+     disponible o falla, el botón se oculta y se escribe a mano. */
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) $("mic").style.display = "none";
+  else {
+    let rec = null;
+    $("mic").addEventListener("click", () => {
+      if (rec) { rec.stop(); return; }
+      rec = new SR();
+      rec.lang = { es: "es-PE", en: "en-US", qu: "es-PE" }[alumno?.lang || "es"];
+      rec.interimResults = false;
+      $("mic").classList.add("grabando");
+      rec.onresult = (e) => {
+        $("pregunta").value =
+          ($("pregunta").value + " " + e.results[0][0].transcript).trim();
+      };
+      rec.onerror = () => aviso("No pude escuchar; escribe tu pregunta.");
+      rec.onend = () => { $("mic").classList.remove("grabando"); rec = null; };
+      rec.start();
+    });
+  }
+
+  // -------------------------------------- reloj visual del turno ---
+  function iniciarReloj(seg) {
+    clearInterval(cronometro);
+    const pinta = () => {
+      const m = Math.floor(Math.max(seg, 0) / 60), s = Math.max(seg, 0) % 60;
+      $("reloj").textContent = `${m}:${String(s).padStart(2, "0")}`;
+      $("reloj").classList.toggle("urgente", seg <= 30);
+    };
+    pinta();
+    cronometro = setInterval(() => {
+      seg--; pinta();
+      if (seg <= 0) clearInterval(cronometro);
+    }, 1000);
+  }
+
+  // ------------------------------------------- cierre del turno ---
+  function terminarTurno(conCelebracion) {
+    clearInterval(cronometro);
+    fetch("/api/end", { method: "POST" }).catch(() => {});  // resumen en el servidor
+    if (!conCelebracion) { volverAEntrada(); return; }
+
+    $("celebra-texto").textContent = `¡Muy bien, ${alumno.name}!`;
+    pantalla("celebracion");   // cancela cualquier timer viejo
+
+    // Reinicia la animación de la barra de avance en cada celebración.
+    const avance = $("avance");
+    avance.classList.remove("corriendo");
+    void avance.offsetWidth;                                   // fuerza reflow
+    avance.style.setProperty("--dur", AUTO_CELEBRACION + "ms");
+    avance.classList.add("corriendo");
+
+    // El botón manual no puede saltarse el mínimo legible.
+    $("btn-siguiente").disabled = true;
+    later(() => { $("btn-siguiente").disabled = false; }, MIN_CELEBRACION);
+    later(volverAEntrada, AUTO_CELEBRACION);
+  }
+
+  function volverAEntrada() {
+    clearInterval(cronometro);
+    $("nombre").value = "";
+    $("btn-siguiente").disabled = false;
+    $("avance").classList.remove("corriendo");
+    ocultarBarraAccion();
+    pantalla("entrada");
+    $("nombre").focus();
+  }
+
+  const celebrar = () => terminarTurno(true);
+  $("btn-terminar").addEventListener("click", () => terminarTurno(false));
+  $("btn-celebrar").addEventListener("click", celebrar);
+  $("btn-siguiente").addEventListener("click", volverAEntrada);
+</script>
+</body>
+</html>
